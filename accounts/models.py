@@ -8,7 +8,7 @@ class User(AbstractUser):
         ADMIN = 'admin', 'Admin'
         TEACHER = 'teacher' , 'Teacher'
         STUDENT = 'student', 'Student'
-        coordinator = 'coordinator', 'Coordinator'
+        COORDINATOR = 'coordinator', 'Coordinator'
         
     role = models.CharField(max_length=20, choices=Role.choices)
     phone = models.CharField(max_length=20, blank=True, null=True)
@@ -22,9 +22,9 @@ class User(AbstractUser):
     
 class StudentProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE , related_name='student_profile')
-    gurdian_name = models.CharField(max_length=255)
-    gurdian_phone = models.CharField(max_length=20)
-    gurdian_relation = models.CharField(max_length=50)
+    guardian_name = models.CharField(max_length=255)
+    guardian_phone = models.CharField(max_length=20)
+    guardian_relation = models.CharField(max_length=50)
     address = models.TextField(blank=True)
     
     def __str__(self):
@@ -38,5 +38,6 @@ class TeacherProfile(models.Model):
     
     def __str__(self):
         return f"{self.user.get_full_name()} - {self.specialization}"
+    
     
     
