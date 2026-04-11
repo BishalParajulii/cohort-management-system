@@ -10,7 +10,7 @@ class User(AbstractUser):
         STUDENT = 'student', 'Student'
         COORDINATOR = 'coordinator', 'Coordinator'
         
-    role = models.CharField(max_length=20, choices=Role.choices)
+    role = models.CharField(max_length=20, choices=Role.choices, default=Role.ADMIN)
     phone = models.CharField(max_length=20, blank=True, null=True)
     
     def is_student(self):
@@ -18,7 +18,12 @@ class User(AbstractUser):
     
     def is_teacher(self):
         return self.role == self.Role.TEACHER
-    
+
+    def is_admin(self):
+        return self.role == self.Role.ADMIN
+
+    def is_coordinator(self):
+        return self.role == self.Role.COORDINATOR
     
 class StudentProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE , related_name='student_profile')

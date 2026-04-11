@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 
 # Create your models here.
 class Institution(models.Model):
@@ -14,7 +15,7 @@ class Institution(models.Model):
 class Department(models.Model):
     institution = models.ForeignKey(Institution, on_delete=models.CASCADE , related_name='departments')
     name = models.CharField(max_length=200)
-    code = models.IntegerField(unique=True)
+    code = models.CharField(max_length=20, unique=True)
     head = models.ForeignKey('accounts.User', on_delete=models.SET_NULL , null=True , blank=True,related_name='departments')
 
     class Meta:
@@ -36,6 +37,10 @@ class AcademicYear(models.Model):
     class Meta:
         unique_together = ('institution', 'name')
         ordering = ['-start_date']
+
+    def clean(self):
+        if self.start_date and self.end_date and self.start_date >= self.end_date:
+            raise ValidationError('Start date must be before end date.')
 
     def __str__(self):
         return f"{self.name} ({self.institution.name})"
