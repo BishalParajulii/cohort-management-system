@@ -31,13 +31,17 @@ class StudentProfile(models.Model):
         return f"{self.user.get_full_name()}"
     
 class TeacherProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE , related_name='teacher_profile')
-    specialization = models.CharField(max_length=255)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='teacher_profile')
+    department = models.ForeignKey(
+        'institutions.Department', on_delete=models.SET_NULL,
+        null=True, blank=True, related_name='teachers'
+    )
+    subjects = models.ManyToManyField(
+        'academics.Subject', related_name='teachers', blank=True
+    )
     joining_date = models.DateField()
     address = models.TextField(blank=True)
-    
+
     def __str__(self):
-        return f"{self.user.get_full_name()} - {self.specialization}"
-    
-    
-    
+        dept = self.department.name if self.department else 'Unassigned'
+        return f"{self.user.get_full_name()} — {dept}"
