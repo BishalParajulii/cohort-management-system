@@ -12,6 +12,7 @@ class User(AbstractUser):
         
     role = models.CharField(max_length=20, choices=Role.choices, default=Role.ADMIN)
     phone = models.CharField(max_length=20, blank=True, null=True)
+    address = models.TextField(blank=True)
     
     def is_student(self):
         return self.role == self.Role.STUDENT
@@ -30,7 +31,6 @@ class StudentProfile(models.Model):
     guardian_name = models.CharField(max_length=255)
     guardian_phone = models.CharField(max_length=20)
     guardian_relation = models.CharField(max_length=50)
-    address = models.TextField(blank=True)
     
     def __str__(self):
         return f"{self.user.get_full_name()}"
@@ -45,7 +45,6 @@ class TeacherProfile(models.Model):
         'academics.Subject', related_name='teachers', blank=True
     )
     joining_date = models.DateField()
-    address = models.TextField(blank=True)
 
     def __str__(self):
         dept = self.department.name if self.department else 'Unassigned'

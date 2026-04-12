@@ -2,14 +2,16 @@ from django.db import models
 from django.core.exceptions import ValidationError
 
 # Create your models here.
+
 class Institution(models.Model):
     name = models.CharField(max_length=200)
     address = models.TextField()
+    contact_number = models.CharField(max_length=20)
+    email = models.EmailField()
     logo = models.ImageField(upload_to='logo/' , blank=True)
     
     def __str__(self):
         return self.name
-
 
 
 class Department(models.Model):
@@ -47,7 +49,7 @@ class AcademicYear(models.Model):
 
 
 class Grade(models.Model):
-    """Class levels — Class 11, Class 12"""
+    
     institution = models.ForeignKey(Institution, on_delete=models.CASCADE, related_name='grades')
     name = models.CharField(max_length=50)
     order = models.IntegerField(default=0)
