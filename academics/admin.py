@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Subject, Enrollment
+from .models import Subject, Enrollment, StudentAttendance, TeacherAttendance
 
 
 @admin.register(Subject)
@@ -13,3 +13,15 @@ class EnrollmentAdmin(admin.ModelAdmin):
     list_display = ('student', 'cohort', 'roll_number', 'status', 'enrolled_date')
     list_filter = ('status', 'cohort__academic_year', 'cohort__section__department')
     filter_horizontal = ('subjects',)
+
+
+@admin.register(StudentAttendance)
+class StudentAttendanceAdmin(admin.ModelAdmin):
+    list_display = ('enrollment', 'date', 'status')
+    list_filter = ('status', 'date')
+
+
+@admin.register(TeacherAttendance)
+class TeacherAttendanceAdmin(admin.ModelAdmin):
+    list_display = ('teacher', 'date', 'status')
+    list_filter = ('status', 'date')

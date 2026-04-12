@@ -54,3 +54,43 @@ class Enrollment(models.Model):
 
     def __str__(self):
         return f"{self.student.get_full_name()} — Roll {self.roll_number} ({self.cohort})"
+
+
+class StudentAttendance(models.Model):
+    class Status(models.TextChoices):
+        PRESENT = 'present', 'Present'
+        ABSENT = 'absent', 'Absent'
+
+
+    enrollment = models.ForeignKey(Enrollment, on_delete=models.CASCADE, related_name='attendances')
+    date = models.DateField()
+    status = models.CharField(max_length=15, choices=Status.choices, default=Status.PRESENT)
+    remarks = models.CharField(max_length=255, blank=True, null=True)
+
+    class Meta:
+        unique_together = ('enrollment', 'date')
+
+    def __str__(self):
+        return f"{self.enrollment.student.get_full_name()} - {self.date} ({self.status})"
+
+
+class TeacherAttendance(models.Model):
+    class Status(models.TextChoices):
+        PRESENT = 'present', 'Present'
+        ABSENT = 'absent', 'Absent'
+        LEAVE = 'leave', 'On Leave'
+
+    teacher = models.ForeignKey('accounts.User', on_delete=models.CASCADE, related_name='teacher_attendances')
+    date = models.DateField()
+    status = models.CharField(max_length=15, choices=Status.choices, default=Status.PRESENT)
+    remarks = models.CharField(max_length=255, blank=True, null=True)
+
+    class Meta:
+        unique_together = ('teacher', 'date')
+
+    def clean(self):
+        if self.teacher and not self.teacher.is_teacher():
+            raise ValidationError('Only users with the teacher role can have teacher attendance records.')
+
+    def __str__(self):
+        return f"{self.teacher.get_full_name()} - {self.date} ({self.status})"
