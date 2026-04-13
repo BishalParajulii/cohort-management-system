@@ -19,7 +19,7 @@ class Subject(models.Model):
         unique_together = ('department', 'grade', 'name')
 
     def __str__(self):
-        return f"{self.name} ({self.department.name} - {self.grade.name})"
+        return f"{self.name} ({self.department.name} - {self.grade.class_level})"
 
 
 class Enrollment(models.Model):
@@ -54,6 +54,7 @@ class Enrollment(models.Model):
 
     def __str__(self):
         return f"{self.student.get_full_name()} — Roll {self.roll_number} ({self.cohort})"
+
 
 
 class StudentAttendance(models.Model):
@@ -94,3 +95,4 @@ class TeacherAttendance(models.Model):
 
     def __str__(self):
         return f"{self.teacher.get_full_name()} - {self.date} ({self.status})"
+

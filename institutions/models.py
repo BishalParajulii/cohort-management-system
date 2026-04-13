@@ -42,14 +42,14 @@ class AcademicYear(models.Model):
 
 
 class Grade(models.Model):
-    name = models.CharField(max_length=50, unique=True)
+    class_level = models.IntegerField(unique=True, default=0)
     order = models.IntegerField(default=0)
 
     class Meta:
         ordering = ['order']
 
     def __str__(self):
-        return self.name
+        return str(self.class_level)
 
 
 class Shift(models.Model):
@@ -71,7 +71,7 @@ class Section(models.Model):
         unique_together = ('department', 'grade', 'shift', 'name')
 
     def __str__(self):
-        return f"{self.department.name} {self.grade.name} - Sec {self.name} ({self.shift.name})"
+        return f"{self.department.name} {self.grade.class_level} - Sec {self.name} ({self.shift.name})"
 
 
 class Cohort(models.Model):

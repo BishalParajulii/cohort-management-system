@@ -20,7 +20,7 @@ class AcademicYearAdmin(admin.ModelAdmin):
 
 @admin.register(Grade)
 class GradeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'order')
+    list_display = ('class_level', 'order')
 
 
 @admin.register(Shift)
