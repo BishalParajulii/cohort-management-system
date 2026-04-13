@@ -9,26 +9,23 @@ class InstitutionAdmin(admin.ModelAdmin):
 
 @admin.register(Department)
 class DepartmentAdmin(admin.ModelAdmin):
-    list_display = ('name', 'institution', 'code', 'head')
-    list_filter = ('institution',)
+    list_display = ('name', 'code', 'head')
 
 
 @admin.register(AcademicYear)
 class AcademicYearAdmin(admin.ModelAdmin):
-    list_display = ('name', 'institution', 'start_date', 'end_date', 'is_active')
-    list_filter = ('institution', 'is_active')
+    list_display = ('name', 'start_date', 'end_date', 'is_active')
+    list_filter = ('is_active',)
 
 
 @admin.register(Grade)
 class GradeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'institution', 'order')
-    list_filter = ('institution',)
+    list_display = ('name', 'order')
 
 
 @admin.register(Shift)
 class ShiftAdmin(admin.ModelAdmin):
-    list_display = ('name', 'institution')
-    list_filter = ('institution',)
+    list_display = ('name',)
 
 
 @admin.register(Section)

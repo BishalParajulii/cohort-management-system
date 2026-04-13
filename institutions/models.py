@@ -15,29 +15,22 @@ class Institution(models.Model):
 
 
 class Department(models.Model):
-    institution = models.ForeignKey(Institution, on_delete=models.CASCADE , related_name='departments')
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, unique=True)
     code = models.CharField(max_length=20, unique=True)
     head = models.ForeignKey('accounts.User', on_delete=models.SET_NULL , null=True , blank=True,related_name='departments')
 
-    class Meta:
-        unique_together = ('institution', 'name')
-
-    
     def __str__(self):
-        return f"{self.name} ({self.institution.name})"
+        return self.name
 
 
 class AcademicYear(models.Model):
-    """Tracks academic sessions — e.g. 2081-2082"""
-    institution = models.ForeignKey(Institution, on_delete=models.CASCADE, related_name='academic_years')
-    name = models.CharField(max_length=50)
+
+    name = models.CharField(max_length=50, unique=True)
     start_date = models.DateField()
     end_date = models.DateField()
     is_active = models.BooleanField(default=False)
 
     class Meta:
-        unique_together = ('institution', 'name')
         ordering = ['-start_date']
 
     def clean(self):
@@ -45,17 +38,14 @@ class AcademicYear(models.Model):
             raise ValidationError('Start date must be before end date.')
 
     def __str__(self):
-        return f"{self.name} ({self.institution.name})"
+        return self.name
 
 
 class Grade(models.Model):
-    
-    institution = models.ForeignKey(Institution, on_delete=models.CASCADE, related_name='grades')
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)
     order = models.IntegerField(default=0)
 
     class Meta:
-        unique_together = ('institution', 'name')
         ordering = ['order']
 
     def __str__(self):
@@ -63,21 +53,15 @@ class Grade(models.Model):
 
 
 class Shift(models.Model):
-    """Morning, Day shift"""
-    institution = models.ForeignKey(Institution, on_delete=models.CASCADE, related_name='shifts')
-    name = models.CharField(max_length=50)
-
-    class Meta:
-        unique_together = ('institution', 'name')
+    
+    name = models.CharField(max_length=50, unique=True)
 
     def __str__(self):
         return self.name
 
 
 class Section(models.Model):
-    """A section within department + grade + shift.
-    E.g. Science Class 11 Morning — Section A
-    """
+
     department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='sections')
     grade = models.ForeignKey(Grade, on_delete=models.CASCADE, related_name='sections')
     shift = models.ForeignKey(Shift, on_delete=models.CASCADE, related_name='sections')
