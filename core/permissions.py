@@ -29,10 +29,6 @@ class IsCoordinator(permissions.BasePermission):
         return bool(request.user and request.user.is_authenticated and request.user.is_coordinator())
 
 
-class IsHOD(permissions.BasePermission):
-
-    def has_permission(self, request, view):
-        return bool(request.user and request.user.is_authenticated and request.user.is_hod())
 
 
 class IsManagement(permissions.BasePermission):
@@ -43,8 +39,7 @@ class IsManagement(permissions.BasePermission):
         
         return (
             request.user.is_admin() or 
-            request.user.is_coordinator() or
-            request.user.is_hod()
+            request.user.is_coordinator()
         )
 
 
@@ -59,8 +54,7 @@ class IsTeacherOrManagement(permissions.BasePermission):
         return (
             request.user.is_teacher() or
             request.user.is_admin() or
-            request.user.is_coordinator() or
-            request.user.is_hod()
+            request.user.is_coordinator()
         )
 
     def has_object_permission(self, request, view, obj):
@@ -78,7 +72,7 @@ class IsOwnerOrAdminOrCoordinator(permissions.BasePermission):
         if not user or not user.is_authenticated:
             return False
 
-        if user.is_admin() or user.is_coordinator() or user.is_hod():
+        if user.is_admin() or user.is_coordinator():
             return True
 
         if hasattr(obj, 'user'):

@@ -21,8 +21,6 @@ class DepartmentViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         qs = Department.objects.all()
-        if user.is_authenticated and user.is_hod():
-            qs = qs.filter(head=user)
         return qs
 
 class AcademicYearViewSet(viewsets.ModelViewSet):
@@ -48,8 +46,6 @@ class SectionViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         qs = Section.objects.all()
-        if user.is_authenticated and user.is_hod():
-            qs = qs.filter(department__head=user)
         return qs
 
 class CohortViewSet(viewsets.ModelViewSet):
@@ -60,6 +56,4 @@ class CohortViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         qs = Cohort.objects.all()
-        if user.is_authenticated and user.is_hod():
-            qs = qs.filter(section__department__head=user)
         return qs

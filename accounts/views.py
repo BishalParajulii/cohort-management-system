@@ -28,8 +28,6 @@ class StudentProfileViewSet(viewsets.ModelViewSet):
         if user.is_authenticated:
             if user.is_student():
                 return qs.filter(user=user)
-            if user.is_hod():
-                return qs.filter(user__enrollments__cohort__section__department__head=user).distinct()
         return qs
 
 
@@ -45,8 +43,6 @@ class TeacherProfileViewSet(viewsets.ModelViewSet):
         if user.is_authenticated:
             if user.is_teacher():
                 return qs.filter(user=user)
-            if user.is_hod():
-                return qs.filter(department__head=user)
         return qs
 
 class CustomTokenObtainPairView(TokenObtainPairView):

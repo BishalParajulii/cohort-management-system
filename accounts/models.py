@@ -9,11 +9,9 @@ class User(AbstractUser):
         TEACHER = 'teacher' , 'Teacher'
         STUDENT = 'student', 'Student'
         COORDINATOR = 'coordinator', 'Coordinator'
-        HOD = 'hod' , "HOD"
         
     role = models.CharField(max_length=20, choices=Role.choices, default=Role.ADMIN)
     phone = models.CharField(max_length=20, blank=True, null=True)
-    address = models.TextField(blank=True)
     
     def is_student(self):
         return self.role == self.Role.STUDENT
@@ -26,9 +24,6 @@ class User(AbstractUser):
 
     def is_coordinator(self):
         return self.role == self.Role.COORDINATOR
-
-    def is_hod(self):
-        return self.role == self.Role.HOD
     
 class StudentProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE , related_name='student_profile')
