@@ -31,6 +31,21 @@ class StudentProfile(models.Model):
     guardian_phone = models.CharField(max_length=20)
     guardian_relation = models.CharField(max_length=50)
     
+    @property
+    def academic_info(self):
+        from academics.models import Enrollment
+        enrollment = Enrollment.objects.filter(student=self.user, status='active').first()
+        if enrollment:
+            return {
+                'grade': enrollment.cohort.section.grade.class_level,
+                'section': enrollment.cohort.section.name,
+                'shift': enrollment.cohort.section.shift.name,
+                'department': enrollment.cohort.section.department.name,
+                'roll_number': enrollment.roll_number,
+                'academic_year': enrollment.cohort.academic_year.name,
+            }
+        return None
+
     def __str__(self):
         return f"{self.user.get_full_name()}"
     

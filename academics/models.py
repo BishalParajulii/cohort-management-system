@@ -35,7 +35,7 @@ class Enrollment(models.Model):
     cohort = models.ForeignKey(
         'institutions.Cohort', on_delete=models.CASCADE, related_name='enrollments'
     )
-    roll_number = models.IntegerField()
+    roll_number = models.IntegerField(blank=True, null=True)
     subjects = models.ManyToManyField(Subject, related_name='enrollments', blank=True)
     enrolled_date = models.DateField(auto_now_add=True)
     status = models.CharField(
@@ -51,6 +51,15 @@ class Enrollment(models.Model):
     def clean(self):
         if self.student and not self.student.is_student():
             raise ValidationError('Only users with the student role can be enrolled.')
+
+    def save(self, *args, **kwargs):
+        if not self.roll_number:
+            # Get the current maximum roll number for this cohort
+            max_roll = Enrollment.objects.filter(cohort=self.cohort).aggregate(
+                models.Max('roll_number')
+            )['roll_number__max']
+            self.roll_number = (max_roll or 0) + 1
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.student.get_full_name()} — Roll {self.roll_number} ({self.cohort})"

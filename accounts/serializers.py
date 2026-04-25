@@ -8,9 +8,11 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'email', 'first_name', 'last_name', 'role', 'phone']
 
 class StudentProfileSerializer(serializers.ModelSerializer):
+    academic_info = serializers.ReadOnlyField()
+
     class Meta:
         model = StudentProfile
-        fields = '__all__'
+        fields = ['id', 'user', 'guardian_name', 'guardian_phone', 'guardian_relation', 'academic_info']
 
 class TeacherProfileSerializer(serializers.ModelSerializer):
     class Meta:
