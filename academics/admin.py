@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Subject, Enrollment, StudentAttendance, TeacherAttendance
+from .models import Subject, Enrollment, StudentAttendance, TeacherAttendance, AcademicResult
 from accounts.models import User
 
 
@@ -36,3 +36,27 @@ class TeacherAttendanceAdmin(admin.ModelAdmin):
         if db_field.name == "teacher":
             kwargs["queryset"] = User.objects.filter(role=User.Role.TEACHER)
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+
+@admin.register(AcademicResult)
+class AcademicResultAdmin(admin.ModelAdmin):
+    list_display = (
+        'enrollment', 'student_name', 'subject', 'term',
+        'marks_obtained', 'max_marks', 'grade'
+    )
+    list_filter = (
+        'term',
+        'subject__department',
+        'enrollment__cohort__section__grade',
+        'enrollment__cohort__section__department',
+    )
+    search_fields = (
+        'enrollment__student__username',
+        'enrollment__student__first_name',
+        'enrollment__student__last_name',
+        'subject__name',
+    )
+
+    def student_name(self, obj):
+        return obj.enrollment.student.get_full_name()
+    student_name.short_description = 'Student'
