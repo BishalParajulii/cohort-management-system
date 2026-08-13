@@ -153,4 +153,4 @@ uvx django-admin --help   # any tool, ephemeral
 - **`VIRTUAL_ENV=venv does not match ... .venv` warning** — stale pip venv is still active in your shell. `deactivate` it.
 - **Editor/IDE can't see packages** — point your interpreter at `.venv/bin/python`.
 - **Mixing pip and uv** — don't. Once on uv, install everything through `uv add` so `pyproject.toml` and `uv.lock` stay in sync.
-- **Docker note (future step)** — when you eventually containerize the app, `uv sync --frozen` inside the image guarantees the exact same versions, and `uv export -o requirements.txt` exists for classic pip-based Docker images.
+- **Docker** — the app now runs in Docker via the `Dockerfile` + `compose.yaml` (`docker compose up -d --build`). The image uses `uv sync --frozen` for reproducible installs. Note `[tool.uv] package = false` in `pyproject.toml` tells uv this is an application, not a package to build — without it `uv sync` fails on the missing build backend.

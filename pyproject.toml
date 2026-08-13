@@ -25,3 +25,6 @@ dependencies = [
     "typing-extensions==4.15.0",
     "uritemplate==4.2.0",
 ]
+
+[tool.uv]
+package = false
