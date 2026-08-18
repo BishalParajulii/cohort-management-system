@@ -8,9 +8,17 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'email', 'first_name', 'last_name', 'role', 'phone']
 
 class StudentProfileSerializer(serializers.ModelSerializer):
+    academic_info = serializers.ReadOnlyField()
+    class_level = serializers.SerializerMethodField()
+    
+    def get_class_level(self, obj):
+        if obj.user.enrollments.filter(status='active').exists():
+            return obj.user.enrollments.filter(status='active').first().cohort.section.grade.class_level
+        return None
+
     class Meta:
         model = StudentProfile
-        fields = '__all__'
+        fields = ['id', 'user', 'guardian_name', 'guardian_phone', 'guardian_relation', 'academic_info', 'class_level']
 
 class TeacherProfileSerializer(serializers.ModelSerializer):
     class Meta:
